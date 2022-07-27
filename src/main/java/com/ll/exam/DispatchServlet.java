@@ -12,23 +12,40 @@ import java.io.IOException;
 @WebServlet("/usr/*")
 public class DispatchServlet extends HttpServlet {
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) {
         Rq rq = new Rq(request, response);
+
         MemberController memberController = new MemberController();
         ArticleController articleController = new ArticleController();
 
-        String url = request.getRequestURI();
+        switch (rq.getMethod()) {
+            case "GET":
+                switch (rq.getPath()) {
+                    case "/usr/article/list/free":
+                        articleController.showList(rq);
+                        break;
+                    case "/usr/article/write/free":
+                        articleController.showWrite(rq);
+                        break;
+                    case "/usr/member/login":
+                        memberController.showLogin(rq);
+                        break;
+                }
+                break;
+            case "POST":
+                switch (rq.getPath()) {
+                    case "/usr/article/write/free":
+                        articleController.doWrite(rq);
+                        break;
+                }
+                break;
 
-        switch (url) {
-            case "/usr/article/list/free":
-                articleController.showList(rq);
-                break;
-            case "/usr/article/write/free":
-                articleController.showWrite(rq);
-                break;
-            case "/usr/member/login":
-                memberController.showLogin(rq);
-                break;
         }
+
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) {
+        doGet(request, response);
     }
 }
