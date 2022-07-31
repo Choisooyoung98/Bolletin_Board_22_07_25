@@ -18,7 +18,7 @@ public class DispatchServlet extends HttpServlet {
         MemberController memberController = new MemberController();
         ArticleController articleController = new ArticleController();
 
-        switch (rq.getMethod()) {
+        switch (rq.getPath()) {
             case "GET":
                 switch (rq.getPath()) {
                     case "/usr/article/list/free":
